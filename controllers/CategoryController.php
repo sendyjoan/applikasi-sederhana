@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\CategoryForm;
 use yii\web\Controller;
 
 class CategoryController extends Controller
@@ -10,6 +11,14 @@ class CategoryController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    public function actionCreate()
+    {
+        $categoryForm = new CategoryForm();
+        return $this->render('create', [
+            'model' => $categoryForm,
+        ]);
     }
 }
 
