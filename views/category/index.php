@@ -1,45 +1,47 @@
 <?php
 
-use yii\helpers\Url;
+use app\models\Category;
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
+use yii\widgets\Pjax;
+/** @var yii\web\View $this */
+/** @var app\models\CategorySearch $searchModel */
+/** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Categories';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-about">
+<div class="category-index">
+
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        This is the Catgory page. You create, update, delete and view categories here.
+        <?= Html::a('Create Category', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <!-- <button class="btn btn-primary" type="button">Create Category</button>-->
-        <a href="<?= Url::toRoute(['category/create']) ?>" class="btn btn-primary">Create</a>
-    </div>
-    <br>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-            <th scope="col">#</th>
-            <th scope="col">Category Name</th>
-            <th scope="col">Category Description</th>
-            <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Makanan Ringan</td>
-                <td>
-                    Makanan yang biasa di konsumsi saat santai
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-sm">View</button>
-                    <button type="button" class="btn btn-warning btn-sm">Update</button>
-                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <?php Pjax::begin(); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            // 'id',
+            'name',
+            'description:ntext',
+            [
+                'class' => ActionColumn::className(),
+                'urlCreator' => function ($action, Category $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
+                 }
+            ],
+        ],
+    ]); ?>
+
+    <?php Pjax::end(); ?>
+
 </div>

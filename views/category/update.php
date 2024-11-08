@@ -5,11 +5,12 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Category $model */
 
-$this->title = 'Create Category';
+$this->title = 'Update Category: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Categories', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="category-create">
+<div class="category-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
