@@ -26,13 +26,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            'name',
-            'description:ntext',
+            [
+                'label' => 'Nama Category',
+                'headerOptions' => ['style' => 'width: 200px;', 'class' => 'text-center'],
+                'value' => function (Category $model) {
+                    return $model->name;
+                },
+            ],
+            [
+                'label' => 'Deskripsi',
+                'headerOptions' => ['class' => 'text-center'],
+                'value' => function (Category $model) {
+                    return $model->description;
+                },
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Category $model, $key, $index, $column) {
