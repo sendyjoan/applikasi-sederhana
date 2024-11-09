@@ -1,27 +1,26 @@
 <?php
 
-use app\models\Category;
+use app\models\Products;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
+
 /** @var yii\web\View $this */
-/** @var app\models\CategorySearch $searchModel */
+/** @var app\models\ProductsSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Categories';
+$this->title = 'Products';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="category-index">
+<div class="products-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Category', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Products', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -32,25 +31,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
             // 'id',
             [
-                'label' => 'Nama Category',
-                'headerOptions' => ['style' => 'width: 200px;', 'class' => 'text-center'],
-                'value' => function (Category $model) {
+                'attribute' => 'Product Name',
+                'headerOptions' => ['class' => 'text-center'],
+                'value' => function (Products $model) {
                     return $model->name;
-                },
+                }
             ],
             [
-                'label' => 'Deskripsi',
+                'attribute' => 'Product Price',
                 'headerOptions' => ['class' => 'text-center'],
-                'value' => function (Category $model) {
+                'value' => function (Products $model) {
+                    return $model->price;
+                }
+            ],
+            [
+                'attribute' => 'Product Description',
+                'headerOptions' => ['class' => 'text-center'],
+                'value' => function (Products $model) {
                     return $model->description;
-                },
+                }
             ],
             [
-                'label' => 'Jumlah Produk',
-                'headerOptions' => ['class' => 'text-center'],
-                'value' => function (Category $model) {
-                    return $model->getProducts()->count();
-                },
+                'attribute' => 'Product Category',
+                'value' => function (Products $model) {
+                    return $model->category->name;
+                }
             ],
             [
                 'class' => ActionColumn::className(),
@@ -58,19 +63,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['class' => 'text-center'],
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, Category $model) {
+                    'view' => function ($url, Products $model) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open">View</span>', $url, [
                             'title' => 'View',
                             'class' => 'btn btn-primary btn-xs',
                         ]);
                     },
-                    'update' => function ($url, Category $model) {
+                    'update' => function ($url, Products $model) {
                         return Html::a('<span class="glyphicon glyphicon-pencil">Update</span>', $url, [
                             'title' => 'Update',
                             'class' => 'btn btn-success btn-xs',
                         ]);
                     },
-                    'delete' => function ($url, Category $model) {
+                    'delete' => function ($url, Products $model) {
                         return Html::a('<span class="glyphicon glyphicon-trash">Delete</span>', $url, [
                             'title' => 'Delete',
                             'class' => 'btn btn-danger btn-xs',
@@ -83,6 +88,5 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-    <?php Pjax::end(); ?>
 
 </div>
