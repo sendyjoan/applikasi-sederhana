@@ -47,10 +47,32 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Category $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+                'header' => 'Aksi',
+                'headerOptions' => ['class' => 'text-center'],
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+                    'view' => function ($url, Category $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open">View</span>', $url, [
+                            'title' => 'View',
+                            'class' => 'btn btn-primary btn-xs',
+                        ]);
+                    },
+                    'update' => function ($url, Category $model) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil">Update</span>', $url, [
+                            'title' => 'Update',
+                            'class' => 'btn btn-success btn-xs',
+                        ]);
+                    },
+                    'delete' => function ($url, Category $model) {
+                        return Html::a('<span class="glyphicon glyphicon-trash">Delete</span>', $url, [
+                            'title' => 'Delete',
+                            'class' => 'btn btn-danger btn-xs',
+                            'data-method' => 'post',
+                            'data-confirm' => 'Are you sure you want to delete this item?',
+                        ]);
+                    },
+                ],
+            ]
         ],
     ]); ?>
 
