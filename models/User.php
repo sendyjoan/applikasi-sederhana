@@ -2,30 +2,32 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 10;
+    public static function tableName()
+    {
+        return 'users';
+    }
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['username', 'password', 'role'], 'required'],
+            [['created_at', 'updated_at', 'role'], 'safe'],
+            [['username', 'password'], 'string', 'max' => 255],
+            [['authKey', 'accessToken', 'role'], 'string', 'max' => 100],
+            [['username'], 'unique'],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['created_at', 'default', 'value' => date('Y-m-d H:i:s')],
+            ['updated_at', 'default', 'value' => date('Y-m-d H:i:s')],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
+        ];
+    }
 
 
     /**
@@ -33,7 +35,8 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        // return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
     }
 
     /**
@@ -41,7 +44,8 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
+        $users = self::find()->where(['accessToken' => $token])->all();
+        foreach ($users as $user) {
             if ($user['accessToken'] === $token) {
                 return new static($user);
             }
@@ -58,13 +62,14 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        // foreach (self::$users as $user) {
+        //     if (strcasecmp($user['username'], $username) === 0) {
+        //         return new static($user);
+        //     }
+        // }
 
-        return null;
+        // return null;
     }
 
     /**
